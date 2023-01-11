@@ -13,45 +13,53 @@ import com.android.volley.toolbox.Volley;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 
 public class MainActivity extends AppCompatActivity {
     private RequestQueue queue;
+    private ListView lstTodos;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         queue = Volley.newRequestQueue(this);
+        lstTodos = findViewById(R.id.lstTodos);
     }
 
     public void btn_OnClick(View view) {
-        final TextView txt = findViewById(R.id.textView);
+
         String url = "https://jsonplaceholder.typicode.com/todos";
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url,
                 null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
-                String msg = "";
-                for (int i = 0; i < 10; i++) {
+                ArrayList<String> todos = new ArrayList<>();
+                for (int i = 0; i < 20; i++) {
                     try {
                         JSONObject obj = response.getJSONObject(i);
-                        msg+= obj.getString("title") + "\n";
+                        todos.add(obj.getString("title"));
                     }catch(JSONException exception){
-                        Log.d("Error", exception.toString());
+                        Log.d("volley_error", exception.toString());
                     }
                 }
-                txt.setText(msg);
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this,
+                        android.R.layout.simple_list_item_1, todos);
+                lstTodos.setAdapter(adapter);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                txt.setText("Error: " + error.toString());
+                Log.d("volley_error", error.toString());
             }
         });
 
