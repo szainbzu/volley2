@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void btn_OnClick(View view) {
 
-        String url = "https://jsonplaceholder.typicode.com/todos";
+        String url = "https://jsonplaceholder.org/posts";
 
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url,
                 null, new Response.Listener<JSONArray>() {
